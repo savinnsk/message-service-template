@@ -1,5 +1,4 @@
 using System.Net.Http.Headers;
-using message_service.Infra.Evolution;
 using message_service.Infra.EvolutionGo;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
@@ -20,8 +19,8 @@ public static class DependencyInjection
             var options = sp.GetRequiredService<IOptions<EvolutionOptions>>().Value;
             
             client.BaseAddress = new Uri(options.EvolutionGoUri);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Bearer", options.EvolutionGoToken);
+            client.DefaultRequestHeaders.Add(
+                "apikey", options.EvolutionGoToken);
         });
         
         

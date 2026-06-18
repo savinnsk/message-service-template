@@ -1,18 +1,31 @@
-using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 
-namespace message_service.Infra.Evolution;
+namespace message_service.Infra.EvolutionGo;
 
 public class EvolutionGoIntegration
 {
-    public HttpClient _httpClient;
-    public IConfiguration _configuration;
+    private readonly HttpClient _httpClient;
 
-    public EvolutionGoIntegration(HttpClient httpClient, IConfiguration configuration)
+    public EvolutionGoIntegration(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _configuration = configuration;
     }
-    
-    
+
+
+    public void CreateInstance(string instanceName)
+    {
+        _httpClient.PostAsJsonAsync("/instance/create",new
+        {
+            name = instanceName,
+            advanceSettings = new
+            {
+                alwaysOnline = true,
+                ignoreGroups = true,
+                ignoreStatus = true,
+                readMessages = true,
+                rejectCall = true
+            }
+        });
+    }
 
 }
