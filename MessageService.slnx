@@ -1,3 +1,3 @@
 <Solution>
-  <Project Path="Infra/Infra.csproj" />
+  <Project Path="src/Infra/Infra.csproj" />
 </Solution>

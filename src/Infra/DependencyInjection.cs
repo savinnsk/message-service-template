@@ -2,18 +2,20 @@ using System.Net.Http.Headers;
 using message_service.Infra.Evolution;
 using message_service.Infra.EvolutionGo;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace message_service.Infra;
 
 public static class DependencyInjection
 {
-    public static void AddInfraServices(this IHostApplicationBuilder builder)
+    public static IServiceCollection AddInfraServices(this IServiceCollection services, IConfiguration configuration)
     {
-        builder.Services.Configure<EvolutionOptions>(
-            builder.Configuration.GetSection("EvolutionGo")
+        services.Configure<EvolutionOptions>(
+            configuration.GetSection("EvolutionGo")
             );
             
-        builder.Services.AddHttpClient<EvolutionGoIntegration>((sp, client) =>
+        services.AddHttpClient<EvolutionGoIntegration>((sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<EvolutionOptions>>().Value;
             
@@ -21,6 +23,9 @@ public static class DependencyInjection
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Bearer", options.EvolutionGoToken);
         });
+        
+        
+        return services;
         
     }
 }
