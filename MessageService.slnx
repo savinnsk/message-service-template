@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Application/Application.csproj" />
+  </Folder>
   <Project Path="src/Infra/Infra.csproj" />
 </Solution>
