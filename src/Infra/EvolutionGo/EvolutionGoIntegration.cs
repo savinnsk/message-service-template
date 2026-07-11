@@ -1,32 +1,31 @@
-using System.Net.Http;
 using System.Net.Http.Json;
+using Domain.Dtos;
+using Domain.Records;
 
 namespace message_service.Infra.EvolutionGo;
 
-public class EvolutionGoIntegration
+public class EvolutionGoIntegration(HttpClient httpClient)
 {
-    private readonly HttpClient _httpClient;
 
-    public EvolutionGoIntegration(HttpClient httpClient)
+    public async Task<Result<string>> CreateInstance(CreateInstanceDto data)
     {
-        _httpClient = httpClient;
-    }
-
-
-    public void CreateInstance(string instanceName)
-    {
-        _httpClient.PostAsJsonAsync("/instance/create",new
-        {
-            name = instanceName,
-            advanceSettings = new
-            {
-                alwaysOnline = true,
-                ignoreGroups = true,
-                ignoreStatus = true,
-                readMessages = true,
-                rejectCall = true
-            }
-        });
+        
+        var request = new CreateInstanceDto(
+            Name: data.Name,
+            Token: Guid.NewGuid().ToString(), 
+            AdvanceSettings: new AdvanceSettings());
+        
+        
+       var result = await httpClient.PostAsJsonAsync("/instance/create", request);
+        
+        var body = await result.Content.ReadAsStringAsync();
+        
+        return new Result<string>(
+            Success: result.IsSuccessStatusCode,
+            Data: body,
+            Error: result.IsSuccessStatusCode ? null : body,
+            StatusCode: (int)result.StatusCode
+            );
     }
 
 }
