@@ -1,29 +1,32 @@
+using System.Text.Json;
 using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using message_service.Infra.EvolutionGo;
+using message_service.Services;
 
 namespace Application.Controllers;
 
 [ApiController]
-[Route("api/message")]
+[Route("api/instance")]
 public class MessageController : ControllerBase
 {
-    private readonly EvolutionGoIntegration _evolutionGoIntegration;
+    private readonly InstanceService _instanceService;
 
-    public MessageController(EvolutionGoIntegration evolutionGoIntegration)
+    public MessageController(InstanceService instanceService)
     {
-        _evolutionGoIntegration = evolutionGoIntegration;
+        _instanceService = instanceService;
     }
     
     
-    [HttpPost("create-instance")]
+    [HttpPost("create")]
     public async Task<IActionResult> CreateInstance([FromBody] CreateInstanceDto data)
     {
-        var result = await _evolutionGoIntegration.CreateInstance(data);
-
+        var result = await _instanceService.CreateInstance(data);
+        
         if (!result.Success)
             return StatusCode(result.StatusCode, result.Error);
         
-        return StatusCode(result.StatusCode, result.Data);
+        using var document = JsonDocument.Parse(result.Data!);
+        
+        return StatusCode(result.StatusCode, document.RootElement);
     }
 }

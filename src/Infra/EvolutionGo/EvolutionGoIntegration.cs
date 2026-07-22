@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using System.Text.Json;
 using Domain.Dtos;
 using Domain.Records;
 
@@ -10,13 +11,7 @@ public class EvolutionGoIntegration(HttpClient httpClient)
     public async Task<Result<string>> CreateInstance(CreateInstanceDto data)
     {
         
-        var request = new CreateInstanceDto(
-            Name: data.Name,
-            Token: Guid.NewGuid().ToString(), 
-            AdvanceSettings: new AdvanceSettings());
-        
-        
-       var result = await httpClient.PostAsJsonAsync("/instance/create", request);
+       var result = await httpClient.PostAsJsonAsync("/instance/create", data);
         
         var body = await result.Content.ReadAsStringAsync();
         
