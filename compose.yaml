@@ -10,7 +10,7 @@
       - postgres_data:/var/lib/postgresql/data
 
   evolution-go:
-    image: evoapicloud/evolution-go:latest
+    image: evoapicloud/evolution-go:main
     ports:
       - "8080:8080"
     environment:
