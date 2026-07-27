@@ -44,10 +44,10 @@ public class InstanceWhatsappController : ControllerBase
     }
     
     
-    [HttpGet("status/{instanceName}")]
-    public async Task<IActionResult> GetStatus(string instanceName)
+    [HttpGet("status/{instanceToken}")]
+    public async Task<IActionResult> GetStatus(string instanceToken)
     {
-        var result = await _instanceService.GetStatus(instanceName);
+        var result = await _instanceService.GetStatus(instanceToken);
         
         if (!result.Success)
             return StatusCode(result.StatusCode, result.Error);
@@ -57,7 +57,7 @@ public class InstanceWhatsappController : ControllerBase
         return StatusCode(result.StatusCode, json);
     }
     
-    //TODO
+    
     [HttpDelete("delete/{instanceId}")]
     public async Task<IActionResult> Delete(string instanceId)
     {
@@ -71,47 +71,46 @@ public class InstanceWhatsappController : ControllerBase
         return StatusCode(result.StatusCode, json);
     }
     
-    //TODO
-    // [HttpPost("disconnect/")]
-    // public async Task<IActionResult> Disconnect()
-    // {
-    //     var result = await _instanceService.Disconnect();
-    //     
-    //     if (!result.Success)
-    //         return StatusCode(result.StatusCode, result.Error);
-    //     
-    //     var json = JsonSerializer.Deserialize<JsonElement>(result.Data!);
-    //     
-    //     return StatusCode(result.StatusCode, json);
-    // }
+    
+     [HttpPost("disconnect/{instanceToken}")]
+     public async Task<IActionResult> Disconnect(string instanceToken)
+     {
+         var result = await _instanceService.Disconnect(instanceToken);
+         
+         if (!result.Success)
+             return StatusCode(result.StatusCode, result.Error);
+         
+         var json = JsonSerializer.Deserialize<JsonElement>(result.Data!);
+         
+         return StatusCode(result.StatusCode, json);
+     }
     
     
-    //TODO
-    // [HttpGet("/")]
-    // public async Task<IActionResult> GetAll()
-    // {
-    //     var result = await _instanceService.GetAll();
-    //     
-    //     if (!result.Success)
-    //         return StatusCode(result.StatusCode, result.Error);
-    //     
-    //     var json = JsonSerializer.Deserialize<JsonElement>(result.Data!);
-    //     
-    //     return StatusCode(result.StatusCode, json);
-    // }
     
+     [HttpGet()]
+     public async Task<IActionResult> GetAll()
+     {
+         var result = await _instanceService.GetAll();
+         
+         if (!result.Success)
+             return StatusCode(result.StatusCode, result.Error);
+         
+         var json = JsonSerializer.Deserialize<JsonElement>(result.Data!);
+         
+         return StatusCode(result.StatusCode, json);
+     }
     
-    //TODO
-    // [HttpGet("/get/{instanceId}")]
-    // public async Task<IActionResult> Get(string instanceId)
-    // {
-    //     var result = await _instanceService.Get(instanceId);
-    //     
-    //     if (!result.Success)
-    //         return StatusCode(result.StatusCode, result.Error);
-    //     
-    //     var json = JsonSerializer.Deserialize<JsonElement>(result.Data!);
-    //     
-    //     return StatusCode(result.StatusCode, json);
-    // }
+     
+     [HttpGet("/get/{instanceId}")]
+     public async Task<IActionResult> Get(string instanceId)
+     {
+         var result = await _instanceService.Get(instanceId);
+         
+         if (!result.Success)
+             return StatusCode(result.StatusCode, result.Error);
+         
+         var json = JsonSerializer.Deserialize<JsonElement>(result.Data!);
+         
+         return StatusCode(result.StatusCode, json);
+     }
 }

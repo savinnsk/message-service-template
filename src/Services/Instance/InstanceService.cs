@@ -46,4 +46,23 @@ public class InstanceService
         
         return _evolutionGoIntegration.Delete(instanceId);
     } 
+    
+    public Task<Result<string>> Disconnect(string instanceToken)
+    {
+        
+        return _evolutionGoIntegration.Disconnect(instanceToken);
+    } 
+    
+    
+    public Task<Result<string>> GetAll()
+    {
+        
+        return _evolutionGoIntegration.GetAll();
+    } 
+    
+    public Task<Result<string>> Get(string instanceId)
+    {
+        
+        return _evolutionGoIntegration.Get(instanceId);
+    } 
 }

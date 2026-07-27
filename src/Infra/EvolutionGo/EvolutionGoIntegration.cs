@@ -23,6 +23,35 @@ public class EvolutionGoIntegration(HttpClient httpClient)
             );
     }
     
+    public async Task<Result<string>> GetAll()
+    {
+        
+        var result = await httpClient.GetAsync("/instance/all");
+        
+        var body = await result.Content.ReadAsStringAsync();
+        
+        return new Result<string>(
+            Success: result.IsSuccessStatusCode,
+            Data: body,
+            Error: result.IsSuccessStatusCode ? null : body,
+            StatusCode: (int)result.StatusCode
+        );
+    }
+    
+    public async Task<Result<string>> Get(string instanceId)
+    {
+        
+        var result = await httpClient.GetAsync($"/instance/info/{instanceId}");
+        
+        var body = await result.Content.ReadAsStringAsync();
+        
+        return new Result<string>(
+            Success: result.IsSuccessStatusCode,
+            Data: body,
+            Error: result.IsSuccessStatusCode ? null : body,
+            StatusCode: (int)result.StatusCode
+        );
+    }
     public async Task<Result<string>> ConnectQr(string instanceName)
     {
 
@@ -65,6 +94,25 @@ public class EvolutionGoIntegration(HttpClient httpClient)
     {
         
         var result = await httpClient.DeleteAsync($"/instance/delete/{instanceId}");
+        
+        var body = await result.Content.ReadAsStringAsync();
+        
+        return new Result<string>(
+            Success: result.IsSuccessStatusCode,
+            Data: body,
+            Error: result.IsSuccessStatusCode ? null : body,
+            StatusCode: (int)result.StatusCode
+        );
+    }
+
+    public async Task<Result<string>> Disconnect(string instanceToken)
+    {
+        
+        var request = new HttpRequestMessage(HttpMethod.Post, "/instance/disconnect");
+        request.Headers.Remove("apikey");
+        request.Headers.Add("apikey", instanceToken);
+
+        var result = await httpClient.SendAsync(request);
         
         var body = await result.Content.ReadAsStringAsync();
         
