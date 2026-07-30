@@ -101,7 +101,7 @@ public class InstanceWhatsappController : ControllerBase
      }
     
      
-     [HttpGet("/get/{instanceId}")]
+     [HttpGet("get/{instanceId}")]
      public async Task<IActionResult> Get(string instanceId)
      {
          var result = await _instanceService.Get(instanceId);

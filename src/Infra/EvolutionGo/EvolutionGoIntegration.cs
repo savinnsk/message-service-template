@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using Domain.Dtos;
 using Domain.Records;
 
@@ -8,6 +7,7 @@ namespace message_service.Infra.EvolutionGo;
 public class EvolutionGoIntegration(HttpClient httpClient)
 {
 
+    //INSTANCE
     public async Task<Result<string>> CreateInstance(CreateInstanceDto data)
     {
         
@@ -124,4 +124,25 @@ public class EvolutionGoIntegration(HttpClient httpClient)
         );
     }
 
+    
+    //MESSAGE
+    public async Task<Result<string>> SendText(string tokenInstance,TextMessage msg)
+    {
+        
+        var request = new HttpRequestMessage(HttpMethod.Post, "/send/text");
+        request.Headers.Remove("apikey");
+        request.Headers.Add("apikey",tokenInstance);
+        request.Content = JsonContent.Create(msg);
+        
+        var result = await httpClient.SendAsync(request);
+        
+        var body = await result.Content.ReadAsStringAsync();
+        
+        return new Result<string>(
+            Success: result.IsSuccessStatusCode,
+            Data: body,
+            Error: result.IsSuccessStatusCode ? null : body,
+            StatusCode: (int)result.StatusCode
+        );
+    }
 }
