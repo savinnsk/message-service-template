@@ -1,9 +1,8 @@
-using System.Text.Json;
 using Domain.Dtos;
 using Domain.Records;
-using message_service.Infra.EvolutionGo;
+using Infra.EvolutionGo;
 
-namespace message_service.Services;
+namespace Services.EvolutionGo.Instance;
 
 
 public class InstanceService

@@ -1,14 +1,14 @@
 using Domain.Dtos;
 using Domain.Records;
-using message_service.Infra.EvolutionGo;
+using Infra.EvolutionGo;
 
-namespace Services.MessageWhatsapp;
+namespace Services.EvolutionGo;
 
-public class MessageWhatsappService
+public class MessageService
 {
     EvolutionGoIntegration _evolutionGoIntegration;
 
-    public MessageWhatsappService(EvolutionGoIntegration evolutionGoIntegration)
+    public MessageService(EvolutionGoIntegration evolutionGoIntegration)
     {
         _evolutionGoIntegration = evolutionGoIntegration;
     }

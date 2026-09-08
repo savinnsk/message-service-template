@@ -1,10 +1,12 @@
-using System.Net.Http.Headers;
+using Infra.EvolutionGo;
+using Infra.MetaApiWpp;
 using message_service.Infra.EvolutionGo;
-using Microsoft.Extensions.Options;
+using message_service.Infra.MetaApiWpp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
-namespace message_service.Infra;
+namespace Infra;
 
 public static class DependencyInjection
 {
@@ -13,7 +15,11 @@ public static class DependencyInjection
         services.Configure<EvolutionOptions>(
             configuration.GetSection("EvolutionGo")
             );
-            
+
+        services.Configure<MetaApiWppOptions>(
+            configuration.GetSection("MetaApi")
+            );
+        
         services.AddHttpClient<EvolutionGoIntegration>((sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<EvolutionOptions>>().Value;
@@ -23,6 +29,7 @@ public static class DependencyInjection
                 "apikey", options.EvolutionGoToken);
         });
         
+        services.AddHttpClient<MetaApiMessage>();
         
         return services;
         

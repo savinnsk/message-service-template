@@ -1,4 +1,5 @@
 using Application.Configs;
+using Infra;
 using message_service.Infra;
 using Services;
 
