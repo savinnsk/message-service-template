@@ -1,7 +1,6 @@
+using System.Net.Http.Headers;
 using Infra.EvolutionGo;
 using Infra.MetaApiWpp;
-using message_service.Infra.EvolutionGo;
-using message_service.Infra.MetaApiWpp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -29,7 +28,12 @@ public static class DependencyInjection
                 "apikey", options.EvolutionGoToken);
         });
         
-        services.AddHttpClient<MetaApiMessage>();
+        services.AddHttpClient<MetaApiMessage>((sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<MetaApiWppOptions>>().Value;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.MetaToken);
+
+        });
         
         return services;
         

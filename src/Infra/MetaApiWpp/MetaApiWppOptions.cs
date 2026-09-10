@@ -1,4 +1,4 @@
-namespace message_service.Infra.MetaApiWpp;
+namespace Infra.MetaApiWpp;
 
 public class MetaApiWppOptions
 {

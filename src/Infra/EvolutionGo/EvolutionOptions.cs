@@ -1,4 +1,4 @@
-namespace message_service.Infra.EvolutionGo;
+namespace Infra.EvolutionGo;
 
 public class EvolutionOptions
 {
