@@ -18,8 +18,9 @@ public class MessageService
     }
     
     
-    public Task<Result<string>> SendList(MetaOptions options, ListMessage message )
+    public Task<Result<string>> SendInteractive(MetaOptions options, InteractiveMessage message )
     {
         return _metaApiMessage.SendList(options, message);
     }
+    
 }

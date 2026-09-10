@@ -26,9 +26,17 @@ public class MessageController(MessageService messageService) : ControllerBase
     } 
     
     [HttpPost("list")]
-    public async Task<IActionResult> SendList([FromBody] SendMessageRequest<ListMessage>request)
+    public async Task<IActionResult> SendList([FromBody] SendMessageRequest<InteractiveMessage>request)
     {
-        var result = await messageService.SendList(request.Options, request.Message);   
+        var result = await messageService.SendInteractive(request.Options, request.Message);   
+      
+        return HttpResult.From(result);
+    } 
+    
+    [HttpPost("button")]
+    public async Task<IActionResult> SendButton([FromBody] SendMessageRequest<InteractiveMessage>request)
+    {
+        var result = await messageService.SendInteractive(request.Options, request.Message);   
       
         return HttpResult.From(result);
     } 

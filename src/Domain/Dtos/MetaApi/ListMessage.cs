@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Domain.Dtos.MetaApi;
 
-public record ListMessage(
+public record InteractiveMessage(
     [property: JsonPropertyName("to")] string To,
     [property: JsonPropertyName("interactive")] Interactive Interactive,
     [property: JsonPropertyName("type")] string? Type = "interactive",
@@ -11,9 +11,9 @@ public record ListMessage(
     );
 
 public record Interactive(
-    [property: JsonPropertyName("header")] Header Header,
-    [property: JsonPropertyName("body")] Body Body,
-    [property: JsonPropertyName("footer")] Footer Footer,
+    [property: JsonPropertyName("header")] Header? Header,
+    [property: JsonPropertyName("body")] Body? Body,
+    [property: JsonPropertyName("footer")] Footer? Footer,
     [property: JsonPropertyName("action")] Action Action,
     [property: JsonPropertyName("type")] string Type = "list"
     
@@ -35,7 +35,8 @@ public record Footer(
 
 public record Action(
     [property: JsonPropertyName("button")] string? Text,
-    [property: JsonPropertyName("sections")] List<Section> Section
+    [property: JsonPropertyName("sections")] List<Section>? Section,
+    [property: JsonPropertyName("buttons")] List<Button>? Button
 );
 
 public record Section(
