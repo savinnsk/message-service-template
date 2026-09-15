@@ -14,9 +14,6 @@ public class MetaWebhookController(IConfiguration configuration) : ControllerBas
         var hubVerifyToken = Request.Query["hub.verify_token"].FirstOrDefault() ?? Request.Query["hub_verify_token"].FirstOrDefault();
         var expectedToken = configuration["MetaApi:WebhookVerifyToken"];
         
-        Console.WriteLine($"mode={hubMode}, verifyToken={hubVerifyToken}, challenge={hubChallengeToken}");
-        
-        Console.WriteLine(expectedToken);     
         if (hubMode == "subscribe" && hubVerifyToken == expectedToken)
         {
             return Content(hubChallengeToken,"text/plain");
