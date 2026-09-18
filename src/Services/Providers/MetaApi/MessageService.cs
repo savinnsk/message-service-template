@@ -1,8 +1,8 @@
 using Domain.Dtos.MetaApi;
 using Domain.Records;
-using Infra.MetaApiWpp;
+using Infra.Providers.Meta;
 
-namespace Services.MetaApi;
+namespace Services.Providers.MetaApi;
 
 public class MessageService
 {

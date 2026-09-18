@@ -1,8 +1,8 @@
 using Domain.Dtos;
 using Domain.Records;
-using Infra.EvolutionGo;
+using Infra.Providers.EvolutionGo;
 
-namespace Services.EvolutionGo;
+namespace Services.Providers.EvolutionGo;
 
 public class MessageService
 {

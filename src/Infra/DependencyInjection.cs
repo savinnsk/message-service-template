@@ -1,6 +1,8 @@
 using System.Net.Http.Headers;
 using Infra.EvolutionGo;
 using Infra.MetaApiWpp;
+using Infra.Providers.EvolutionGo;
+using Infra.Providers.Meta;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

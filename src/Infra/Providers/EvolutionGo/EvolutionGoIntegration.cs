@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using Domain.Dtos;
 using Domain.Records;
 
-namespace Infra.EvolutionGo;
+namespace Infra.Providers.EvolutionGo;
 
 public class EvolutionGoIntegration(HttpClient httpClient)
 {

@@ -1,6 +1,6 @@
 using Domain.Dtos.MetaApi;
 using Microsoft.AspNetCore.Mvc;
-using Services.MetaApi;
+using Services.Providers.MetaApi;
 
 namespace Application.Controllers.MetaApi;
 

@@ -1,4 +1,6 @@
+using Domain.Dtos.MetaApi;
 using Microsoft.AspNetCore.Mvc;
+using Services.Providers.MetaApi;
 
 namespace Application.Controllers.MetaApi;
 
@@ -23,9 +25,15 @@ public class MetaWebhookController(IConfiguration configuration) : ControllerBas
     }
 
     [HttpPost("webhook")]
-    public IActionResult ReceiveWebhook([FromBody] object payload)
+    public IActionResult ReceiveWebhook([FromBody] MetaWebhookPayload payload)
     {
-        Console.WriteLine(payload);
+        
+        var inboundMessages = new MetaWebhook().Mapper(payload);
+
+        //foreach (var bound in  inboundMessages)
+        //{
+        //    Console.WriteLine($"[{bound.Provider}] {bound.SenderName} ({bound.SenderId})");   
+       // }
 
         return Ok();
     }

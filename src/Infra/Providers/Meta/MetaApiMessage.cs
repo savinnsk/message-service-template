@@ -3,7 +3,7 @@ using Domain.Dtos.MetaApi;
 using Domain.Records;
 using Microsoft.Extensions.Logging;
 
-namespace Infra.MetaApiWpp;
+namespace Infra.Providers.Meta;
 
 public class MetaApiMessage(HttpClient httpClient,ILogger<MetaApiMessage> logger)
 {

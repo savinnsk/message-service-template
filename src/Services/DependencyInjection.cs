@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using Services.EvolutionGo;
-using Services.EvolutionGo.Instance;
+using Services.Providers.EvolutionGo;
 
 namespace Services;
 
@@ -10,7 +9,7 @@ public static class DependencyInjection
     {
         services.AddScoped<InstanceService>();
         services.AddScoped<MessageService>();
-        services.AddScoped<MetaApi.MessageService>();
+        services.AddScoped<Providers.MetaApi.MessageService>();
         return services;
     }
 

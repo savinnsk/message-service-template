@@ -1,6 +1,6 @@
 using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Services.EvolutionGo.Instance;
+using Services.Providers.EvolutionGo;
 
 namespace Application.Controllers;
 
