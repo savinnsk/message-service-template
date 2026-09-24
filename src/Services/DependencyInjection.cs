@@ -10,6 +10,7 @@ public static class DependencyInjection
         services.AddScoped<InstanceService>();
         services.AddScoped<MessageService>();
         services.AddScoped<Providers.MetaApi.MessageService>();
+        services.AddScoped<Providers.MetaApi.AccountService>();
         return services;
     }
 
