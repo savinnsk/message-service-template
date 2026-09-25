@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Domain.Dtos.MetaApi;
 using Domain.Records;
@@ -8,10 +9,11 @@ namespace Infra.Providers.Meta;
 public class MetaApiMessage(HttpClient httpClient,ILogger<MetaApiMessage> logger)
 {
 
-    public async Task<Result<string>> SendText(MetaOptions options, TextMessage data)
+    public async Task<Result<string>> SendText(string metaToken, MetaOptions options, TextMessage data)
     {
         var request = new HttpRequestMessage(HttpMethod.Post,
             $"https://graph.facebook.com/{options.Version}/{options.NumberId}/messages");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", metaToken);
 
         logger.LogInformation("Meta SendText NumberId: {NumberId}, Type: {Type}, To:{To}", options.NumberId, data.Type,
             data.To);
@@ -46,10 +48,11 @@ public class MetaApiMessage(HttpClient httpClient,ILogger<MetaApiMessage> logger
     }
 
     
-    public async Task<Result<string>> SendList(MetaOptions options, InteractiveMessage data)
+    public async Task<Result<string>> SendList(string metaToken, MetaOptions options, InteractiveMessage data)
     {
         var request = new HttpRequestMessage(HttpMethod.Post,
             $"https://graph.facebook.com/{options.Version}/{options.NumberId}/messages");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", metaToken);
 
         logger.LogInformation("Meta Send List NumberId: {NumberId}, Type: {Type}, To:{To}", options.NumberId, data.Type,
             data.To);
@@ -83,10 +86,11 @@ public class MetaApiMessage(HttpClient httpClient,ILogger<MetaApiMessage> logger
         }
     }
     
-    public async Task<Result<string>> SendButton(MetaOptions options, InteractiveMessage data)
+    public async Task<Result<string>> SendButton(string metaToken, MetaOptions options, InteractiveMessage data)
     {
         var request = new HttpRequestMessage(HttpMethod.Post,
             $"https://graph.facebook.com/{options.Version}/{options.NumberId}/messages");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", metaToken);
 
         logger.LogInformation("Meta Send Button NumberId: {NumberId}, Type: {Type}, To:{To}", options.NumberId, data.Type,
             data.To);

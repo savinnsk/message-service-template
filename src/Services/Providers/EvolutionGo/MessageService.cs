@@ -13,29 +13,29 @@ public class MessageService
         _evolutionGoIntegration = evolutionGoIntegration;
     }
 
-    public Task<Result<string>> SendText(string tokenInstance,TextMessage msg)
+    public Task<Result<string>> SendText(string evoGoToken,TextMessage msg)
     {
-         return  _evolutionGoIntegration.SendText(tokenInstance,msg);
+         return  _evolutionGoIntegration.SendText(evoGoToken,msg);
     }
     
-    public Task<Result<string>> SendMedia(string tokenInstance,MediaMessage msg)
+    public Task<Result<string>> SendMedia(string evoGoToken,MediaMessage msg)
     {
-        return  _evolutionGoIntegration.SendMedia(tokenInstance,msg);
+        return  _evolutionGoIntegration.SendMedia(evoGoToken,msg);
     }
     
-    public Task<Result<string>> SendLink(string tokenInstance,TextMessage msg)
+    public Task<Result<string>> SendLink(string evoGoToken,TextMessage msg)
     {
-        return  _evolutionGoIntegration.SendLink(tokenInstance,msg);
+        return  _evolutionGoIntegration.SendLink(evoGoToken,msg);
     }
     
     //unstable
-    public Task<Result<string>> SendButton(string tokenInstance,ButtonMessage msg)
+    public Task<Result<string>> SendButton(string evoGoToken,ButtonMessage msg)
     {
-        return  _evolutionGoIntegration.SendButton(tokenInstance,msg);
+        return  _evolutionGoIntegration.SendButton(evoGoToken,msg);
     }
     
-    public Task<Result<string>> SendList(string tokenInstance,ListMessage msg)
+    public Task<Result<string>> SendList(string evoGoToken,ListMessage msg)
     {
-        return  _evolutionGoIntegration.SendList(tokenInstance,msg);
+        return  _evolutionGoIntegration.SendList(evoGoToken,msg);
     }
 }

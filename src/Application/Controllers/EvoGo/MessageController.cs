@@ -8,39 +8,49 @@ namespace Application.Controllers;
 [Route("api/evogo/message")]
 public class MessageController(MessageService messageWhatsappService) : ControllerBase
 {
-    [HttpPost("{tokenInstance}")]
-    public async Task<IActionResult> SendTextMessage(string tokenInstance, [FromBody] TextMessage textMessage)
+    [HttpPost]
+    public async Task<IActionResult> SendTextMessage(
+        [FromHeader(Name = "x-evogo-token")] string evoGoToken,
+        [FromBody] TextMessage textMessage)
     {
-        var result = await messageWhatsappService.SendText(tokenInstance, textMessage);
+        var result = await messageWhatsappService.SendText(evoGoToken, textMessage);
         return HttpResult.From(result);
     }
 
-    [HttpPost("link/{tokenInstance}")]
-    public async Task<IActionResult> SendLinkMessage(string tokenInstance, [FromBody] TextMessage linkMessage)
+    [HttpPost("link")]
+    public async Task<IActionResult> SendLinkMessage(
+        [FromHeader(Name = "x-evogo-token")] string evoGoToken,
+        [FromBody] TextMessage linkMessage)
     {
-        var result = await messageWhatsappService.SendLink(tokenInstance, linkMessage);
+        var result = await messageWhatsappService.SendLink(evoGoToken, linkMessage);
         return HttpResult.From(result);
     }
 
-    [HttpPost("media/{tokenInstance}")]
-    public async Task<IActionResult> SendMediaMessage(string tokenInstance, [FromBody] MediaMessage mediaMessage)
+    [HttpPost("media")]
+    public async Task<IActionResult> SendMediaMessage(
+        [FromHeader(Name = "x-evogo-token")] string evoGoToken,
+        [FromBody] MediaMessage mediaMessage)
     {
-        var result = await messageWhatsappService.SendMedia(tokenInstance, mediaMessage);
+        var result = await messageWhatsappService.SendMedia(evoGoToken, mediaMessage);
         return HttpResult.From(result);
     }
 
     //unstable
-    [HttpPost("button/{tokenInstance}")]
-    public async Task<IActionResult> SendButtonMessage(string tokenInstance, [FromBody] ButtonMessage buttonMessage)
+    [HttpPost("button")]
+    public async Task<IActionResult> SendButtonMessage(
+        [FromHeader(Name = "x-evogo-token")] string evoGoToken,
+        [FromBody] ButtonMessage buttonMessage)
     {
-        var result = await messageWhatsappService.SendButton(tokenInstance, buttonMessage);
+        var result = await messageWhatsappService.SendButton(evoGoToken, buttonMessage);
         return HttpResult.From(result);
     }
 
-    [HttpPost("list/{tokenInstance}")]
-    public async Task<IActionResult> SendListMessage(string tokenInstance, [FromBody] ListMessage listMessage)
+    [HttpPost("list")]
+    public async Task<IActionResult> SendListMessage(
+        [FromHeader(Name = "x-evogo-token")] string evoGoToken,
+        [FromBody] ListMessage listMessage)
     {
-        var result = await messageWhatsappService.SendList(tokenInstance, listMessage);
+        var result = await messageWhatsappService.SendList(evoGoToken, listMessage);
         return HttpResult.From(result);
     }
 }

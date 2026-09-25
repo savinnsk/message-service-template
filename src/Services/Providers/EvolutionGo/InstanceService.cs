@@ -13,7 +13,7 @@ public class InstanceService
     {
         _evolutionGoIntegration = evolutionGoIntegration;
     }
-    public Task<Result<string>> CreateInstance(CreateInstanceDto dto)
+    public Task<Result<string>> CreateInstance(string evoGoToken, CreateInstanceDto dto)
     {
 
         var nameInstance = $"{dto.Name}_{Guid.NewGuid()}";
@@ -24,44 +24,44 @@ public class InstanceService
             AdvanceSettings: dto.AdvanceSettings
             );
         
-        return _evolutionGoIntegration.CreateInstance(req);
+        return _evolutionGoIntegration.CreateInstance(evoGoToken, req);
     } 
     
     
-    public Task<Result<string>> ConnectQr(string instanceName)
+    public Task<Result<string>> ConnectQr(string evoGoToken)
     {
         
-        return _evolutionGoIntegration.ConnectQr(instanceName);
+        return _evolutionGoIntegration.ConnectQr(evoGoToken);
     } 
     
-    public Task<Result<string>> GetStatus(string instanceName)
+    public Task<Result<string>> GetStatus(string evoGoToken)
     {
         
-        return _evolutionGoIntegration.GetStatus(instanceName);
+        return _evolutionGoIntegration.GetStatus(evoGoToken);
     } 
     
-    public Task<Result<string>> Delete(string instanceId)
+    public Task<Result<string>> Delete(string evoGoToken, string instanceId)
     {
         
-        return _evolutionGoIntegration.Delete(instanceId);
+        return _evolutionGoIntegration.Delete(evoGoToken, instanceId);
     } 
     
-    public Task<Result<string>> Disconnect(string instanceToken)
+    public Task<Result<string>> Disconnect(string evoGoToken)
     {
         
-        return _evolutionGoIntegration.Disconnect(instanceToken);
+        return _evolutionGoIntegration.Disconnect(evoGoToken);
     } 
     
     
-    public Task<Result<string>> GetAll()
+    public Task<Result<string>> GetAll(string evoGoToken)
     {
         
-        return _evolutionGoIntegration.GetAll();
+        return _evolutionGoIntegration.GetAll(evoGoToken);
     } 
     
-    public Task<Result<string>> Get(string instanceId)
+    public Task<Result<string>> Get(string evoGoToken, string instanceId)
     {
         
-        return _evolutionGoIntegration.Get(instanceId);
+        return _evolutionGoIntegration.Get(evoGoToken, instanceId);
     } 
 }

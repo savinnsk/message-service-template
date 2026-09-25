@@ -1,92 +1,123 @@
-using System.Text.Json.Serialization;
 using Domain.Dtos.MetaApi;
 using Microsoft.AspNetCore.Mvc;
 using Services.Providers.MetaApi;
 
 namespace Application.Controllers.MetaApi;
 
-public record MetaAccountRequest<TData>(
-    [property: JsonPropertyName("options")] MetaOptions Options,
-    [property: JsonPropertyName("data")] TData Data
-);
-
-public record MetaAccountOptionsRequest(
-    [property: JsonPropertyName("options")] MetaOptions Options
-);
-
 [ApiController]
 [Route("api/meta/account")]
 public class AccountController(AccountService accountService) : ControllerBase
 {
-    [HttpPost("phone/register")]
-    public async Task<IActionResult> RegisterPhone([FromBody] MetaAccountRequest<RegisterPhoneNumberDto> request)
+    [HttpPost("phone/{numberId}/register")]
+    public async Task<IActionResult> RegisterPhone(
+        string numberId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version,
+        [FromBody] RegisterPhoneNumberDto data)
     {
-        var result = await accountService.RegisterPhone(request.Data, request.Options);
+        var result = await accountService.RegisterPhone(metaToken, data, CreateOptions(numberId, version));
 
         return HttpResult.From(result);
     }
 
-    [HttpPost("phone/deregister")]
-    public async Task<IActionResult> DeregisterPhone([FromBody] MetaAccountOptionsRequest request)
+    [HttpPost("phone/{numberId}/deregister")]
+    public async Task<IActionResult> DeregisterPhone(
+        string numberId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version)
     {
-        var result = await accountService.DeregisterPhone(request.Options);
+        var result = await accountService.DeregisterPhone(metaToken, CreateOptions(numberId, version));
 
         return HttpResult.From(result);
     }
 
     [HttpPost("waba/{wabaId}/subscribe")]
-    public async Task<IActionResult> SubscribeWABA(string wabaId, [FromBody] MetaAccountOptionsRequest request)
+    public async Task<IActionResult> SubscribeWABA(
+        string wabaId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version)
     {
-        var result = await accountService.SubscribeWABA(wabaId, request.Options);
+        var result = await accountService.SubscribeWABA(metaToken, wabaId, NormalizeVersion(version));
 
         return HttpResult.From(result);
     }
 
-    [HttpPost("business/{businessId}/owned-wabas")]
-    public async Task<IActionResult> GetOwnedWABAs(string businessId, [FromBody] MetaAccountOptionsRequest request)
+    [HttpGet("business/{businessId}/owned-wabas")]
+    public async Task<IActionResult> GetOwnedWABAs(
+        string businessId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version)
     {
-        var result = await accountService.GetOwnedWABAs(businessId, request.Options);
+        var result = await accountService.GetOwnedWABAs(metaToken, businessId, NormalizeVersion(version));
 
         return HttpResult.From(result);
     }
 
-    [HttpPost("business/{businessId}/shared-wabas")]
-    public async Task<IActionResult> GetSharedWABAs(string businessId, [FromBody] MetaAccountOptionsRequest request)
+    [HttpGet("business/{businessId}/shared-wabas")]
+    public async Task<IActionResult> GetSharedWABAs(
+        string businessId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version)
     {
-        var result = await accountService.GetSharedWABAs(businessId, request.Options);
+        var result = await accountService.GetSharedWABAs(metaToken, businessId, NormalizeVersion(version));
 
         return HttpResult.From(result);
     }
 
-    [HttpPost("waba/{wabaId}/phones")]
-    public async Task<IActionResult> GetPhonesByWABAId(string wabaId, [FromBody] MetaAccountOptionsRequest request)
+    [HttpGet("waba/{wabaId}/phones")]
+    public async Task<IActionResult> GetPhonesByWABAId(
+        string wabaId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version)
     {
-        var result = await accountService.GetPhonesByWABAId(wabaId, request.Options);
+        var result = await accountService.GetPhonesByWABAId(metaToken, wabaId, NormalizeVersion(version));
 
         return HttpResult.From(result);
     }
 
-    [HttpPost("phone/request-code")]
-    public async Task<IActionResult> RequestVerificationCode([FromBody] MetaAccountRequest<RequestVerificationCodeDto> request)
+    [HttpPost("phone/{numberId}/request-code")]
+    public async Task<IActionResult> RequestVerificationCode(
+        string numberId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version,
+        [FromBody] RequestVerificationCodeDto data)
     {
-        var result = await accountService.RequestVerificationCode(request.Data, request.Options);
+        var result = await accountService.RequestVerificationCode(metaToken, data, CreateOptions(numberId, version));
 
         return HttpResult.From(result);
     }
 
-    [HttpPost("phone/verify-code")]
-    public async Task<IActionResult> VerifyCode([FromBody] MetaAccountRequest<VerifyCodeDto> request)
+    [HttpPost("phone/{numberId}/verify-code")]
+    public async Task<IActionResult> VerifyCode(
+        string numberId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version,
+        [FromBody] VerifyCodeDto data)
     {
-        var result = await accountService.VerifyCode(request.Data, request.Options);
+        var result = await accountService.VerifyCode(metaToken, data, CreateOptions(numberId, version));
 
         return HttpResult.From(result);
     }
 
-    [HttpPost("phone/two-step-verification")]
-    public async Task<IActionResult> SetTwoStepVerification([FromBody] MetaAccountRequest<SetTwoTepVerificationCodeDto> request)
+    [HttpPost("phone/{numberId}/two-step-verification")]
+    public async Task<IActionResult> SetTwoStepVerification(
+        string numberId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version,
+        [FromBody] SetTwoTepVerificationCodeDto data)
     {
-        var result = await accountService.SetTwoStepVerification(request.Data, request.Options);
+        var result = await accountService.SetTwoStepVerification(metaToken, data, CreateOptions(numberId, version));
 
         return HttpResult.From(result);
+    }
+
+    private static MetaOptions CreateOptions(string numberId, string version)
+    {
+        return new MetaOptions(numberId, NormalizeVersion(version));
+    }
+
+    private static string NormalizeVersion(string version)
+    {
+        return string.IsNullOrWhiteSpace(version) ? "v25.0" : version;
     }
 }

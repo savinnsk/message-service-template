@@ -12,15 +12,15 @@ public class MessageService
     {
         _metaApiMessage = metaApiMessage;
     }
-    public Task<Result<string>> SendText(MetaOptions options, TextMessage textMessage )
+    public Task<Result<string>> SendText(string metaToken, MetaOptions options, TextMessage textMessage )
     {
-        return _metaApiMessage.SendText(options, textMessage);
+        return _metaApiMessage.SendText(metaToken, options, textMessage);
     }
     
     
-    public Task<Result<string>> SendInteractive(MetaOptions options, InteractiveMessage message )
+    public Task<Result<string>> SendInteractive(string metaToken, MetaOptions options, InteractiveMessage message )
     {
-        return _metaApiMessage.SendList(options, message);
+        return _metaApiMessage.SendList(metaToken, options, message);
     }
     
 }

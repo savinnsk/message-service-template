@@ -4,40 +4,48 @@ using Services.Providers.MetaApi;
 
 namespace Application.Controllers.MetaApi;
 
-
-using System.Text.Json.Serialization;
-
-public record SendMessageRequest<TMessage>(
-    [property: JsonPropertyName("options")] MetaOptions Options,
-    [property: JsonPropertyName("message")] TMessage Message
-);
-
 [ApiController]
-[Route("api/meta/message")]
+[Route("api/meta/{numberId}/message")]
 public class MessageController(MessageService messageService) : ControllerBase
 {
     [HttpPost("text")]
-    public async Task<IActionResult> SendText([FromBody] SendMessageRequest<TextMessage> request)
+    public async Task<IActionResult> SendText(
+        string numberId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version,
+        [FromBody] TextMessage message)
     {
-      var result = await messageService.SendText(request.Options, request.Message);   
+      var result = await messageService.SendText(metaToken, CreateOptions(numberId, version), message);   
       
       return HttpResult.From(result);
     } 
     
     [HttpPost("list")]
-    public async Task<IActionResult> SendList([FromBody] SendMessageRequest<InteractiveMessage>request)
+    public async Task<IActionResult> SendList(
+        string numberId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version,
+        [FromBody] InteractiveMessage message)
     {
-        var result = await messageService.SendInteractive(request.Options, request.Message);   
+        var result = await messageService.SendInteractive(metaToken, CreateOptions(numberId, version), message);   
       
         return HttpResult.From(result);
     } 
     
     [HttpPost("button")]
-    public async Task<IActionResult> SendButton([FromBody] SendMessageRequest<InteractiveMessage>request)
+    public async Task<IActionResult> SendButton(
+        string numberId,
+        [FromHeader(Name = "x-meta-token")] string metaToken,
+        [FromHeader(Name = "x-meta-version")] string version,
+        [FromBody] InteractiveMessage message)
     {
-        var result = await messageService.SendInteractive(request.Options, request.Message);   
+        var result = await messageService.SendInteractive(metaToken, CreateOptions(numberId, version), message);   
       
         return HttpResult.From(result);
-    } 
-    
+    }
+
+    private static MetaOptions CreateOptions(string numberId, string version)
+    {
+        return new MetaOptions(numberId, string.IsNullOrWhiteSpace(version) ? "v25.0" : version);
+    }
 }

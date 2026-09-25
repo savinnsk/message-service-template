@@ -67,10 +67,10 @@ Current instance endpoints:
 | Method | Route | Description |
 | --- | --- | --- |
 | `POST` | `/api/evogo/instance/create` | Create a new EvoGo instance |
-| `GET` | `/api/evogo/instance/qr/{instanceName}` | Get the QR connection data |
-| `GET` | `/api/evogo/instance/status/{instanceToken}` | Check instance status |
+| `GET` | `/api/evogo/instance/qr` | Get the QR connection data |
+| `GET` | `/api/evogo/instance/status` | Check instance status |
 | `DELETE` | `/api/evogo/instance/delete/{instanceId}` | Delete an instance |
-| `POST` | `/api/evogo/instance/disconnect/{instanceToken}` | Disconnect an instance |
+| `POST` | `/api/evogo/instance/disconnect` | Disconnect an instance |
 | `GET` | `/api/evogo/instance` | List all instances |
 | `GET` | `/api/evogo/instance/get/{instanceId}` | Get one instance |
 
@@ -78,18 +78,19 @@ Current message endpoints:
 
 | Method | Route | Description |
 | --- | --- | --- |
-| `POST` | `/api/evogo/message/{tokenInstance}` | Send text |
-| `POST` | `/api/evogo/message/link/{tokenInstance}` | Send link |
-| `POST` | `/api/evogo/message/media/{tokenInstance}` | Send media |
-| `POST` | `/api/evogo/message/button/{tokenInstance}` | Send button message |
-| `POST` | `/api/evogo/message/list/{tokenInstance}` | Send list message |
+| `POST` | `/api/evogo/message` | Send text |
+| `POST` | `/api/evogo/message/link` | Send link |
+| `POST` | `/api/evogo/message/media` | Send media |
+| `POST` | `/api/evogo/message/button` | Send button message |
+| `POST` | `/api/evogo/message/list` | Send list message |
 
-The EvoGo integration is implemented in `src/Infra/EvolutionGo/EvolutionGoIntegration.cs` and configured through:
+All EvoGo endpoints receive the provider API key or instance token through the `x-evogo-token` header.
+
+The EvoGo integration is implemented in `src/Infra/Providers/EvolutionGo/EvolutionGoIntegration.cs` and configured through:
 
 ```json
 "EvolutionGo": {
-  "EvolutionGoUri": "http://localhost:8080",
-  "EvolutionGoToken": "sua-chave-segura-aqui"
+  "EvolutionGoUri": "http://localhost:8080"
 }
 ```
 
@@ -101,39 +102,48 @@ Current message endpoints:
 
 | Method | Route | Description |
 | --- | --- | --- |
-| `POST` | `/api/meta/message/text` | Send text message |
-| `POST` | `/api/meta/message/list` | Send interactive list message |
-| `POST` | `/api/meta/message/button` | Send interactive button message |
+| `POST` | `/api/meta/{numberId}/message/text` | Send text message |
+| `POST` | `/api/meta/{numberId}/message/list` | Send interactive list message |
+| `POST` | `/api/meta/{numberId}/message/button` | Send interactive button message |
 
-The Meta API integration is implemented in `src/Infra/MetaApiWpp/MetaApiMessage.cs`. It sends requests to:
+Current account endpoints:
+
+| Method | Route | Description |
+| --- | --- | --- |
+| `POST` | `/api/meta/account/phone/{numberId}/register` | Register a phone number |
+| `POST` | `/api/meta/account/phone/{numberId}/deregister` | Deregister a phone number |
+| `POST` | `/api/meta/account/phone/{numberId}/request-code` | Request phone verification code |
+| `POST` | `/api/meta/account/phone/{numberId}/verify-code` | Verify phone code |
+| `POST` | `/api/meta/account/phone/{numberId}/two-step-verification` | Set two-step verification PIN |
+| `POST` | `/api/meta/account/waba/{wabaId}/subscribe` | Subscribe a WABA |
+| `GET` | `/api/meta/account/business/{businessId}/owned-wabas` | List owned WABAs |
+| `GET` | `/api/meta/account/business/{businessId}/shared-wabas` | List shared WABAs |
+| `GET` | `/api/meta/account/waba/{wabaId}/phones` | List phone numbers for a WABA |
+
+The Meta API integration is implemented in `src/Infra/Providers/Meta/MetaApiMessage.cs`. It sends requests to:
 
 ```text
 https://graph.facebook.com/{version}/{numberId}/messages
 ```
 
-Meta API authentication is configured through:
+Meta API authentication and runtime options are provided per request through headers:
 
-```json
-"MetaApi": {
-  "MetaToken": "token"
-}
+```text
+x-meta-token: Meta Graph API bearer token
+x-meta-version: Graph API version, for example v25.0
 ```
 
-Each request body includes provider options and the message payload:
+The WhatsApp phone number ID is passed in the URL as `{numberId}` only for endpoints that operate on a phone number.
+
+Each request body contains only the provider payload:
 
 ```json
 {
-  "options": {
-    "version": "v20.0",
-    "numberId": "WHATSAPP_PHONE_NUMBER_ID"
-  },
-  "message": {
-    "messaging_product": "whatsapp",
-    "to": "5511999999999",
-    "type": "text",
-    "text": {
-      "body": "Hello"
-    }
+  "messaging_product": "whatsapp",
+  "to": "5511999999999",
+  "type": "text",
+  "text": {
+    "body": "Hello"
   }
 }
 ```
@@ -205,16 +215,15 @@ Required sections today:
 ```json
 {
   "EvolutionGo": {
-    "EvolutionGoUri": "http://localhost:8080",
-    "EvolutionGoToken": "sua-chave-segura-aqui"
+    "EvolutionGoUri": "http://localhost:8080"
   },
   "MetaApi": {
-    "MetaToken": "token"
+    "WebhookVerifyToken": "token"
   }
 }
 ```
 
-Do not commit real provider tokens.
+Do not commit real provider tokens. Provider API tokens must be sent by request headers.
 
 ## Roadmap
 

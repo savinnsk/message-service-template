@@ -16,51 +16,57 @@ public class InstanceController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateInstance([FromBody] CreateInstanceDto data)
+    public async Task<IActionResult> CreateInstance(
+        [FromHeader(Name = "x-evogo-token")] string evoGoToken,
+        [FromBody] CreateInstanceDto data)
     {
-        var result = await _instanceService.CreateInstance(data);
+        var result = await _instanceService.CreateInstance(evoGoToken, data);
         return HttpResult.From(result);
     }
 
-    [HttpGet("qr/{instanceName}")]
-    public async Task<IActionResult> ConnectQr(string instanceName)
+    [HttpGet("qr")]
+    public async Task<IActionResult> ConnectQr([FromHeader(Name = "x-evogo-token")] string evoGoToken)
     {
-        var result = await _instanceService.ConnectQr(instanceName);
+        var result = await _instanceService.ConnectQr(evoGoToken);
         return HttpResult.From(result);
     }
 
-    [HttpGet("status/{instanceToken}")]
-    public async Task<IActionResult> GetStatus(string instanceToken)
+    [HttpGet("status")]
+    public async Task<IActionResult> GetStatus([FromHeader(Name = "x-evogo-token")] string evoGoToken)
     {
-        var result = await _instanceService.GetStatus(instanceToken);
+        var result = await _instanceService.GetStatus(evoGoToken);
         return HttpResult.From(result);
     }
 
     [HttpDelete("delete/{instanceId}")]
-    public async Task<IActionResult> Delete(string instanceId)
+    public async Task<IActionResult> Delete(
+        string instanceId,
+        [FromHeader(Name = "x-evogo-token")] string evoGoToken)
     {
-        var result = await _instanceService.Delete(instanceId);
+        var result = await _instanceService.Delete(evoGoToken, instanceId);
         return HttpResult.From(result);
     }
 
-    [HttpPost("disconnect/{instanceToken}")]
-    public async Task<IActionResult> Disconnect(string instanceToken)
+    [HttpPost("disconnect")]
+    public async Task<IActionResult> Disconnect([FromHeader(Name = "x-evogo-token")] string evoGoToken)
     {
-        var result = await _instanceService.Disconnect(instanceToken);
+        var result = await _instanceService.Disconnect(evoGoToken);
         return HttpResult.From(result);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromHeader(Name = "x-evogo-token")] string evoGoToken)
     {
-        var result = await _instanceService.GetAll();
+        var result = await _instanceService.GetAll(evoGoToken);
         return HttpResult.From(result);
     }
 
     [HttpGet("get/{instanceId}")]
-    public async Task<IActionResult> Get(string instanceId)
+    public async Task<IActionResult> Get(
+        string instanceId,
+        [FromHeader(Name = "x-evogo-token")] string evoGoToken)
     {
-        var result = await _instanceService.Get(instanceId);
+        var result = await _instanceService.Get(evoGoToken, instanceId);
         return HttpResult.From(result);
     }
 }

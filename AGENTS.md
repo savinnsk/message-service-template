@@ -59,30 +59,33 @@ Existing examples:
 Provider route prefixes:
 
 - Meta account: `api/meta/account`
-- Meta message: `api/meta/message`
+- Meta message: `api/meta/{numberId}/message`
 - EvoGo instance: `api/evogo/instance`
 - EvoGo message: `api/evogo/message`
 
-For Meta request bodies that need runtime provider options, use the existing shape:
+Meta credentials and runtime options are passed by headers so different clients can use different provider accounts through the same API:
+
+- `x-meta-token`: Meta Graph API bearer token.
+- `x-meta-version`: Graph API version, defaults to `v25.0` in controllers when blank.
+
+The WhatsApp phone number ID is passed in the route as `{numberId}` only for endpoints that operate on a phone number. WABA and business account operations must not require `numberId`; they should use `wabaId` or `businessId` plus `x-meta-token` and `x-meta-version`.
+
+Meta request bodies should contain only the provider payload DTO, not `options` or credentials.
+
+Example Meta message body:
 
 ```json
 {
-  "options": {
-    "version": "v20.0",
-    "numberId": "WHATSAPP_PHONE_NUMBER_ID"
-  },
-  "data": {}
+  "messaging_product": "whatsapp",
+  "to": "5511999999999",
+  "type": "text",
+  "text": {
+    "body": "Hello"
+  }
 }
 ```
 
-For Meta message sending, the current shape is:
-
-```json
-{
-  "options": {},
-  "message": {}
-}
-```
+EvolutionGo credentials are also passed per request using `x-evogo-token`. Do not put instance/API tokens in route parameters.
 
 ### Services
 
@@ -180,13 +183,10 @@ src/Infra/DependencyInjection.cs
 Current Meta style:
 
 ```csharp
-services.AddHttpClient<Account>((sp, client) =>
-{
-    var options = sp.GetRequiredService<IOptions<MetaApiWppOptions>>().Value;
-    client.DefaultRequestHeaders.Authorization =
-        new AuthenticationHeaderValue("Bearer", options.MetaToken);
-});
+services.AddHttpClient<Account>();
 ```
+
+Meta authorization headers are set on each provider request from the controller header value.
 
 ## Configuration
 
@@ -199,16 +199,15 @@ Current sections:
 ```json
 {
   "EvolutionGo": {
-    "EvolutionGoUri": "http://localhost:8080",
-    "EvolutionGoToken": "token"
+    "EvolutionGoUri": "http://localhost:8080"
   },
   "MetaApi": {
-    "MetaToken": "token"
+    "WebhookVerifyToken": "token"
   }
 }
 ```
 
-Meta per-request options are passed in request bodies through `MetaOptions`, usually including Graph API `version` and WhatsApp `numberId`.
+Provider API tokens must come from request headers, not `appsettings`.
 
 ## Coding Rules
 
@@ -217,6 +216,8 @@ Meta per-request options are passed in request bodies through `MetaOptions`, usu
 - Use primary constructors where the surrounding code already uses them.
 - Use async provider methods returning `Task<Result<string>>`.
 - Keep `HttpResult.From(result)` as the standard controller response for provider JSON responses.
+- Read provider credentials/options from request headers in controllers.
+- Keep request bodies focused on the provider payload DTO.
 - Preserve provider-specific DTO names and JSON field names.
 - Do not move provider-specific details into `Application`.
 - Do not introduce a new abstraction layer unless explicitly requested or clearly needed.
@@ -247,4 +248,3 @@ When adding a provider operation:
 4. Add a thin endpoint in the matching `Application` controller.
 5. Register new services or provider clients in dependency injection.
 6. Build the solution with `dotnet build`.
-
