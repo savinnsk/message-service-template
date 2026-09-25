@@ -1,5 +1,5 @@
 using Application.Configs;
-using message_service.Infra;
+using Infra;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,10 +11,10 @@ builder.Services.AddDocumentation();
 
 var app = builder.Build();
 
-//if (app.Environment.IsDevelopment())
-//{
-       app.UseDocumentation();
 
+
+//if (app.Environment.IsDevelopment()){
+       app.UseDocumentation();
 //}
 
 
