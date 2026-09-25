@@ -10,7 +10,8 @@ public record RegisterPhoneNumberDto(
     
 public record RequestVerificationCodeDto(
     [property:JsonPropertyName("code_method")] string CodeMethod,
-    [property:JsonPropertyName("locale")] string Locale
+    [property:JsonPropertyName("language")] string? Language,
+    [property:JsonPropertyName("locale")] string? Locale = null
 );
 
 public record VerifyCodeDto(

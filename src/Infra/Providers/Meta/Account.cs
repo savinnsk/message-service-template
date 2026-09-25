@@ -218,9 +218,13 @@ public class Account(HttpClient httpClient,ILogger<Account> logger)
     //VERIFICATION CODE
     public async Task<Result<string>> RequestVerificationCode(string metaToken, RequestVerificationCodeDto data,MetaOptions options)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://graph.facebook.com/{options.Version}/{options.NumberId}/request_code");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"https://graph.facebook.com/{options.Version}/{options.NumberId}/request_code");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", metaToken);
-        request.Content = JsonContent.Create(data);
+        request.Content = JsonContent.Create(new
+        {
+            code_method = data.CodeMethod,
+            language = data.Language ?? data.Locale
+        });
         
         logger.LogInformation("Meta Request Verification PhoneNumberId : {phoneNumberId}", options.NumberId);
         
@@ -253,7 +257,7 @@ public class Account(HttpClient httpClient,ILogger<Account> logger)
     
     public async Task<Result<string>> VerifyCode(string metaToken, VerifyCodeDto data,MetaOptions options)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://graph.facebook.com/{options.Version}/{options.NumberId}/verify_code");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"https://graph.facebook.com/{options.Version}/{options.NumberId}/verify_code");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", metaToken);
         request.Content = JsonContent.Create(data);
         
@@ -288,7 +292,7 @@ public class Account(HttpClient httpClient,ILogger<Account> logger)
     
     public async Task<Result<string>> SetTwoStepVerification(string metaToken, SetTwoTepVerificationCodeDto data,MetaOptions options)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://graph.facebook.com/{options.Version}/{options.NumberId}");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"https://graph.facebook.com/{options.Version}/{options.NumberId}");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", metaToken);
         request.Content = JsonContent.Create(data);
         
